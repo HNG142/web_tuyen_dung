@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng tuyển dụng AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ứng dụng Tuyển dụng AI</h1>
+
+        <div id="auth-section" class="card">
+            <h2>Đăng ký / Đăng nhập</h2>
+            <form id="register-form">
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Mật khẩu" required>
+                <button type="submit">Đăng ký</button>
+            </form>
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Mật khẩu" required>
+                <button type="submit">Đăng nhập</button>
+            </form>
+            <p id="auth-message"></p>
+        </div>
+
+        <div id="main-app" style="display: none;">
+            <p>Chào mừng, <span id="user-email"></span>! <button id="logout-button">Đăng xuất</button></p>
+            
+            <div class="tabs">
+                <button class="tab-button active" onclick="openTab('upload')">Nộp CV/JD</button>
+                <button class="tab-button" onclick="openTab('interview')">Phỏng vấn AI</button>
+                <button class="tab-button" onclick="openTab('skill-test')">Kiểm tra kỹ năng</button>
+                <button class="tab-button" onclick="openTab('candidate-list')">Danh sách ứng viên</button>
+            </div>
+
+            <div id="upload" class="tab-content active card">
+                <h2>Nộp CV & JD</h2>
+                <form id="upload-form">
+                    <input type="text" id="candidate-full-name" placeholder="Họ và tên ứng viên" required>
+                    <input type="email" id="candidate-email" placeholder="Email ứng viên" required>
+                    <input type="text" id="candidate-position" placeholder="Vị trí ứng tuyển" required>
+                    <label for="cv-file">Chọn file CV (PDF/DOCX):</label>
+                    <input type="file" id="cv-file" accept=".pdf,.docx" required>
+                    <label for="jd-file">Chọn file JD (PDF/DOCX):</label>
+                    <input type="file" id="jd-file" accept=".pdf,.docx" required>
+                    <button type="submit">Nộp</button>
+                </form>
+                <div id="upload-status"></div>
+                <div id="matching-results" style="display: none;">
+                    <h3>Kết quả phân tích mức độ phù hợp:</h3>
+                    <p>Mức độ phù hợp: <span id="match-score"></span>%</p>
+                    <h4>Phản hồi:</h4>
+                    <p id="match-feedback"></p>
+                    <h4>Gợi ý chỉnh sửa CV:</h4>
+                    <ul id="cv-suggestions"></ul>
+                </div>
+            </div>
+
+            <div id="interview" class="tab-content card">
+                <h2>Phỏng vấn sơ bộ với AI</h2>
+                <input type="number" id="interview-candidate-id" placeholder="ID ứng viên" required>
+                <button id="start-interview-button">Bắt đầu phỏng vấn</button>
+                <div id="chat-box" style="display: none;">
+                    <div id="messages"></div>
+                    <input type="text" id="chat-input" placeholder="Nhập câu trả lời của bạn..." disabled>
+                    <button id="send-chat-button" disabled>Gửi</button>
+                    <p id="interview-status"></p>
+                </div>
+            </div>
+
+            <div id="skill-test" class="tab-content card">
+                <h2>Kiểm tra kỹ năng trắc nghiệm</h2>
+                <input type="number" id="test-candidate-id" placeholder="ID ứng viên" required>
+                <input type="text" id="test-skill-category" placeholder="Danh mục kỹ năng (ví dụ: Python)" required>
+                <button id="start-test-button">Bắt đầu kiểm tra</button>
+                <div id="quiz-container" style="display: none;">
+                    <div id="questions-display"></div>
+                    <button id="submit-test-button" style="display: none;">Nộp bài</button>
+                    <div id="test-results"></div>
+                </div>
+                <h3>Tạo câu hỏi mới:</h3>
+                <form id="create-question-form">
+                    <textarea id="new-question-text" placeholder="Nội dung câu hỏi" required></textarea>
+                    <input type="text" id="new-question-options" placeholder="Các lựa chọn (cách nhau bởi dấu phẩy)" required>
+                    <input type="text" id="new-question-correct" placeholder="Đáp án đúng" required>
+                    <input type="text" id="new-question-category" placeholder="Danh mục kỹ năng" required>
+                    <button type="submit">Tạo câu hỏi</button>
+                </form>
+            </div>
+
+            <div id="candidate-list" class="tab-content card">
+                <h2>Danh sách ứng viên</h2>
+                <input type="number" id="search-candidate-id" placeholder="Tìm theo ID ứng viên (để trống để lấy tất cả)">
+                <button id="search-candidates-button">Tìm kiếm</button>
+                <table id="candidates-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ và tên</th>
+                            <th>Email</th>
+                            <th>Vị trí</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <div id="candidate-details" style="display: none;" class="card">
+                    <h3>Thông tin chi tiết ứng viên</h3>
+                    <p><strong>ID:</strong> <span id="detail-id"></span></p>
+                    <p><strong>Tên:</strong> <span id="detail-name"></span></p>
+                    <p><strong>Email:</strong> <span id="detail-email"></span></p>
+                    <p><strong>Vị trí:</strong> <span id="detail-position"></span></p>
+                    <h4>Kết quả phù hợp CV/JD:</h4>
+                    <div id="detail-match-results"></div>
+                    <h4>Kết quả phỏng vấn AI:</h4>
+                    <div id="detail-interview-results"></div>
+                    <h4>Kết quả kiểm tra kỹ năng:</h4>
+                    <div id="detail-skill-test-results"></div>
+                    <button id="send-offer-button">Gửi thư mời</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
