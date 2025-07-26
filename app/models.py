@@ -1,9 +1,10 @@
+from __future__ import annotations
 from sqlmodel import Field, SQLModel, Relationship # Field để định nghĩa cột, Relationship để liên kết bảng
 from typing import Optional, List # Các kiểu dữ liệu Python
 from datetime import datetime # Để làm việc với thời gian
 from pydantic import BaseModel, EmailStr
 from app.schemas.match_results_schemas import MatchResultPublic
-from __future__ import annotations
+
 
 # Định nghĩa bảng User (người dùng hệ thống, ví dụ: nhà tuyển dụng)
 class User(SQLModel, table=True): # table=True nghĩa là đây sẽ là một bảng trong DB
