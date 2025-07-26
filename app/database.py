@@ -1,15 +1,15 @@
 import os
 from sqlmodel import create_engine, SQLModel, Session
 from dotenv import load_dotenv
-from sqlalchemy.engine import URL 
+from sqlalchemy.engine import make_url
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recruitment.db")
+parsed_url = make_url(DATABASE_URL)
 
-parsed_url = URL.create_from_uri(DATABASE_URL)
 if parsed_url.drivername == "psycopg2": 
-    parsed_url.drivername = "psycopg_binary"
+    parsed_url.drivername = "postgresql+psycopg_binary"
 elif parsed_url.drivername == "postgresql":
     parsed_url.drivername = "postgresql+psycopg_binary" 
 elif parsed_url.drivername == "postgresql+psycopg":
