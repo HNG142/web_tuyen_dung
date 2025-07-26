@@ -8,9 +8,9 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recruitment.db")
 
 connection_string = DATABASE_URL
 if connection_string.startswith("postgresql://"):
-    connection_string = connection_string.replace("postgresql://", "postgresql+psycopg_binary://")
-elif connection_string.startswith("postgres://"):
-    connection_string = connection_string.replace("postgres://", "postgresql+psycopg_binary://")
+    connection_string = connection_string.replace("postgresql://", "postgresql+asyncpg://")
+elif connection_string.startswith("postgres://"): # Đề phòng nếu Render dùng postgres://
+    connection_string = connection_string.replace("postgres://", "postgresql+asyncpg://")
 engine = create_engine(connection_string, echo=True)
 
 def create_db_and_tables():
