@@ -12,7 +12,7 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recruitment.db")
 # engine = create_engine(DATABASE_URL, echo=True, connect_args={"check_same_thread": False})
 
 # Đối với PostgreSQL (khuyến nghị trên Heroku)
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(DATABASE_URL.replace("postgresql://", "postgresql+psycopg_binary://"), echo=True)
 
 def create_db_and_tables():
     print("Creating database and tables...")
