@@ -7,7 +7,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recruitment.db")
 
-parsed_url = URL.create.from_string(DATABASE_URL)
+parsed_url = URL.from_string(DATABASE_URL)
 if parsed_url.drivername == "psycopg2": 
     parsed_url.drivername = "psycopg_binary"
 elif parsed_url.drivername == "postgresql":
@@ -17,7 +17,6 @@ elif parsed_url.drivername == "postgresql+psycopg":
 
 
 engine = create_engine(parsed_url, echo=True) 
-# -----------------------------------------------------------
 
 def create_db_and_tables():
     print("Creating database and tables...")
