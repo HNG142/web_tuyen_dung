@@ -1,6 +1,7 @@
 from sqlmodel import Field, SQLModel, Relationship # Field để định nghĩa cột, Relationship để liên kết bảng
 from typing import Optional, List # Các kiểu dữ liệu Python
 from datetime import datetime # Để làm việc với thời gian
+from pydantic import BaseModel, EmailStr
 
 # Định nghĩa bảng User (người dùng hệ thống, ví dụ: nhà tuyển dụng)
 class User(SQLModel, table=True): # table=True nghĩa là đây sẽ là một bảng trong DB
@@ -89,3 +90,9 @@ class SkillTestResultItem(SQLModel, table=True):
     
     selected_answer: Optional[str] # Đáp án ứng viên chọn
     is_correct: Optional[bool] # Có đúng không
+
+    class User(BaseModel):
+    email: EmailStr
+
+user = User(email="test@example.com")
+print(user.email)
