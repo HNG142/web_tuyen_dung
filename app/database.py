@@ -1,22 +1,33 @@
 import os
 from sqlmodel import create_engine, SQLModel, Session
+from sqlalchemy.engine import URL 
 from dotenv import load_dotenv
-from sqlalchemy.engine import make_url
 
-load_dotenv()
+load_dotenv() 
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./recruitment.db")
-parsed_url = make_url(DATABASE_URL)
-
-if parsed_url.drivername == "psycopg2": 
-    parsed_url.drivername = "postgresql+psycopg_binary"
-elif parsed_url.drivername == "postgresql":
-    parsed_url.drivername = "postgresql+psycopg_binary" 
-elif parsed_url.drivername == "postgresql+psycopg":
-    parsed_url.drivername = "postgresql+psycopg_binary"
 
 
-engine = create_engine(parsed_url, echo=True) 
+original_parsed_url = URL.make_url(DATABASE_URL)
+
+
+try:
+    final_url = URL.create(
+        drivername="postgresql+psycopg_binary", 
+        username=original_parsed_url.username,
+        password=original_parsed_url.password,
+        host=original_parsed_url.host,
+        port=original_parsed_url.port,
+        database=original_parsed_url.database,
+        query=original_parsed_url.query 
+    )
+except AttributeError as e:
+ 
+    print(f"Error creating final URL: {e}")
+
+    raise 
+
+engine = create_engine(final_url, echo=True)
 
 def create_db_and_tables():
     print("Creating database and tables...")
@@ -25,4 +36,4 @@ def create_db_and_tables():
 
 def get_session():
     with Session(engine) as session:
-        yield session
+            yield session
