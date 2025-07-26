@@ -2,6 +2,8 @@ from sqlmodel import Field, SQLModel, Relationship # Field để định nghĩa 
 from typing import Optional, List # Các kiểu dữ liệu Python
 from datetime import datetime # Để làm việc với thời gian
 from pydantic import BaseModel, EmailStr
+from app.schemas.match_results_schemas import MatchResultPublic
+from __future__ import annotations
 
 # Định nghĩa bảng User (người dùng hệ thống, ví dụ: nhà tuyển dụng)
 class User(SQLModel, table=True): # table=True nghĩa là đây sẽ là một bảng trong DB
@@ -44,6 +46,17 @@ class MatchResult(SQLModel, table=True):
     suggestions: str # Gợi ý chỉnh sửa CV (lưu dưới dạng chuỗi JSON)
     created_at: datetime = Field(default_factory=datetime.utcnow) # Thời gian tạo
 
+class MatchResultBase(SQLModel):
+    match_score: int
+    feedback: str
+    suggestions: str
+    created_at: datetime
+
+class MatchResultCreate(MatchResultBase):
+    pass
+
+class MatchResultPublic(MatchResultBase):
+    id: int
 # Định nghĩa bảng Interview (kết quả phỏng vấn AI)
 class Interview(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
