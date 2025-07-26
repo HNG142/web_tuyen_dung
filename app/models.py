@@ -91,7 +91,7 @@ class SkillTestResultItem(SQLModel, table=True):
     selected_answer: Optional[str] # Đáp án ứng viên chọn
     is_correct: Optional[bool] # Có đúng không
 
-    class User(BaseModel):
+class User(BaseModel):
     email: EmailStr
 
 user = User(email="test@example.com")
