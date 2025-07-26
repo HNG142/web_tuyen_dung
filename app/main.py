@@ -1,4 +1,6 @@
 from fastapi import FastAPI # Khung web FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.database import create_db_and_tables # Import hàm tạo bảng DB
 from fastapi.staticfiles import StaticFiles # Để phục vụ các file tĩnh (CSS, JS)
 from fastapi.responses import HTMLResponse # Để trả về các trang HTML
 from fastapi.templating import Jinja2Templates # Để render các template HTML
@@ -50,3 +52,40 @@ if __name__ == "__main__":
     # port=8000 là cổng mặc định
     # reload=True để server tự động khởi động lại khi có thay đổi code (tiện cho phát triển)
     uvicorn.run(app, host="0.0.0.0", port=8000)
+origins = [
+    "https://*.anvil.app",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# ----------------------------------------
+
+# --- THÊM ĐOẠN CODE NÀY ĐỂ TẠO BẢNG KHI ỨNG DỤNG KHỞI ĐỘNG ---
+@app.on_event("startup")
+async def startup_event():
+    print("Running startup event: Creating database and tables if they don't exist.")
+    try:
+        create_db_and_tables()
+        print("Database and tables checked/created successfully.")
+    except Exception as e:
+        print(f"Error during database startup: {e}")
+        # Tùy chọn: Log lỗi chi tiết hơn hoặc gửi thông báo
+# -----------------------------------------------------------
+
+# Các import và router khác của bạn
+from app.routers import candidates, interview, tests, auth
+
+app.include_router(candidates.router, prefix="/candidates", tags=["candidates"])
+app.include_router(interview.router, prefix="/interviews", tags=["interviews"])
+app.include_router(tests.router, prefix="/tests", tags=["tests"])
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Recruitment App API!"}
