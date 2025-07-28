@@ -1,6 +1,6 @@
 from __future__ import annotations
 from sqlmodel import Field, SQLModel, Relationship, Session, select
-from app.models import MatchResultPublic
+from app.models import MatchResultPublic, Interview
 from pydantic import BaseModel, EmailStr 
 from typing import List, Optional, Dict 
 from datetime import datetime
