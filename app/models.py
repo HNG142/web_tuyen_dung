@@ -4,8 +4,6 @@ from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
-# ------------------- DATABASE MODELS -------------------
-
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(unique=True, index=True)
@@ -85,8 +83,6 @@ class SkillTestResultItem(SQLModel, table=True):
     selected_answer: Optional[str]
     is_correct: Optional[bool]
 
-# ------------------- SCHEMA FOR Pydantic -------------------
-
 class MatchResultBase(SQLModel):
     match_score: int
     feedback: str
@@ -99,10 +95,9 @@ class MatchResultCreate(MatchResultBase):
 class MatchResultPublic(MatchResultBase):
     id: int
 
-class UserSchema(BaseModel):
-    email: EmailStr
+class User(BaseModel):
+    email: str
 
-# ------------------- TEST -------------------
 
-user = UserSchema(email="test@example.com")
+user = User(email="test@example.com")
 print(user.email)
