@@ -110,3 +110,9 @@ class SkillTestResultPublic(BaseModel):
     start_time: datetime
     end_time: Optional[datetime]
     items: List[SkillTestResultItemPublic]
+
+class SendOfferRequest(BaseModel):
+    candidate_id: int
+    offer_details: str 
+    salary_offered: Optional[float] = None 
+    start_date: Optional[datetime] = None 
