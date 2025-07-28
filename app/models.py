@@ -17,24 +17,6 @@ class User(SQLModel, table=True): # table=True nghĩa là đây sẽ là một b
     # Liên kết với bảng Candidate (Một User có thể quản lý nhiều Candidate)
     candidates: List["Candidate"] = Relationship(back_populates="user")
 
-# Định nghĩa bảng Candidate (ứng viên)
-class Candidate(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: Optional[int] = Field(default=None, foreign_key="user.id") # Liên kết với User
-    user: Optional[User] = Relationship(back_populates="candidates") # Quan hệ ngược lại
-
-    full_name: str
-    email: str = Field(unique=True, index=True)
-    phone_number: Optional[str] = None
-    applied_position: Optional[str] = None # Vị trí ứng tuyển
-    cv_text: Optional[str] = None # Lưu trữ văn bản trích xuất từ CV
-    jd_text: Optional[str] = None # Lưu trữ văn bản mô tả công việc
-
-    # Các mối quan hệ với các bảng khác (một ứng viên có nhiều kết quả phỏng vấn, kiểm tra...)
-    interviews: List["Interview"] = Relationship(back_populates="candidate")
-    skill_tests: List["SkillTestResult"] = Relationship(back_populates="candidate")
-    match_results: List["MatchResult"] = Relationship(back_populates="candidate")
-
 # Định nghĩa bảng MatchResult (kết quả so khớp CV-JD)
 class MatchResult(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -58,6 +40,25 @@ class MatchResultCreate(MatchResultBase):
 
 class MatchResultPublic(MatchResultBase):
     id: int
+    
+# Định nghĩa bảng Candidate (ứng viên)
+class Candidate(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[int] = Field(default=None, foreign_key="user.id") # Liên kết với User
+    user: Optional[User] = Relationship(back_populates="candidates") # Quan hệ ngược lại
+
+    full_name: str
+    email: str = Field(unique=True, index=True)
+    phone_number: Optional[str] = None
+    applied_position: Optional[str] = None # Vị trí ứng tuyển
+    cv_text: Optional[str] = None # Lưu trữ văn bản trích xuất từ CV
+    jd_text: Optional[str] = None # Lưu trữ văn bản mô tả công việc
+
+    # Các mối quan hệ với các bảng khác (một ứng viên có nhiều kết quả phỏng vấn, kiểm tra...)
+    interviews: List["Interview"] = Relationship(back_populates="candidate")
+    skill_tests: List["SkillTestResult"] = Relationship(back_populates="candidate")
+    match_results: List["MatchResult"] = Relationship(back_populates="candidate")
+
 # Định nghĩa bảng Interview (kết quả phỏng vấn AI)
 class Interview(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
