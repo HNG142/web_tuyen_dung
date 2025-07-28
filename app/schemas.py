@@ -1,5 +1,6 @@
 from __future__ import annotations
-from app.models import MatchResultPublic, CandidatePublic
+from sqlmodel import Field, SQLModel, Relationship, Session, select
+from app.models import MatchResultPublic
 from pydantic import BaseModel, EmailStr 
 from typing import List, Optional, Dict 
 from datetime import datetime
@@ -21,14 +22,17 @@ class Token(BaseModel):
 class TokenData(BaseModel): 
     email: Optional[str] = None
 
-class CandidateCreate(BaseModel): 
+class CandidateCreate(SQLModel): 
     full_name: str
     email: EmailStr
     phone_number: Optional[str] = None
     applied_position: Optional[str] = None
 
-class CandidatePublic(SQLModel): 
+class CandidatePublic(BaseModel): 
     id: int
+    full_name: str
+    email: str 
+    match_results: List[MatchResultPublic]
   
     match_results: Optional[List["MatchResultPublic"]] = None
     interviews: Optional[List["Interview"]] = None
