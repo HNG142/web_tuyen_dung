@@ -1,46 +1,52 @@
 from __future__ import annotations
 from sqlmodel import Field, SQLModel, Relationship, Session, select
-from app.models import MatchResultPublic, Interview
-from pydantic import BaseModel, EmailStr 
-from typing import List, Optional, Dict 
+from typing import List, Optional, Dict
 from datetime import datetime
+from pydantic import BaseModel, EmailStr 
+from app.models import Interview, SkillTestResult 
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
-class UserPublic(BaseModel): 
+class UserPublic(BaseModel):
     id: int
     email: EmailStr
     is_active: bool
     is_admin: bool
 
-class Token(BaseModel): 
+class Token(BaseModel):
     access_token: str
     token_type: str
 
-class TokenData(BaseModel): 
+class TokenData(BaseModel):
     email: Optional[str] = None
 
-class CandidateCreate(SQLModel): 
+class CandidateCreate(SQLModel):
     full_name: str
     email: EmailStr
     phone_number: Optional[str] = None
     applied_position: Optional[str] = None
 
-class CandidatePublic(BaseModel): 
+class MatchResultPublic(BaseModel): 
+    match_score: int
+    feedback: str
+    suggestions: List[str]
+    created_at: datetime
+
+
+class CandidatePublic(BaseModel):
     id: int
     full_name: str
     email: str 
-    match_results: List[MatchResultPublic]
-  
-    match_results: Optional[List["MatchResultPublic"]] = None
-    interviews: Optional[List["Interview"]] = None
-    skill_tests: Optional[List["SkillTestResult"]] = None
+    match_results: Optional[List[MatchResultPublic]] = None 
+
+    interviews: Optional[List[Interview]] = None 
+    skill_tests: Optional[List[SkillTestResult]] = None 
 
 CandidatePublic.model_rebuild()
 
-class CVJDUploadResponse(BaseModel): 
+class CVJDUploadResponse(BaseModel):
     candidate_id: int
     message: str
     cv_text_extracted: bool
@@ -49,60 +55,54 @@ class CVJDUploadResponse(BaseModel):
     feedback: Optional[str] = None
     suggestions: Optional[List[str]] = None
 
-class MatchResultPublic(BaseModel): 
-    match_score: int
-    feedback: str
-    suggestions: List[str] 
-    created_at: datetime
-
-class ChatbotMessage(BaseModel): 
+class ChatbotMessage(BaseModel):
     message: str
 
-class ChatbotResponse(BaseModel): 
+class ChatbotResponse(BaseModel):
     response: str
     session_id: str
-    first_message: Optional[str] = None 
+    first_message: Optional[str] = None
 
-class InterviewEvaluationRequest(BaseModel): 
+class InterviewEvaluationRequest(BaseModel):
     question: str
     candidate_answer: str
     jd_text: str
 
-class InterviewEvaluationResponse(BaseModel): 
+class InterviewEvaluationResponse(BaseModel):
     score: int
     feedback: str
 
-class QuestionCreate(BaseModel): 
+class QuestionCreate(BaseModel):
     question_text: str
     options: List[str]
     correct_answer: str
     skill_category: str
 
-class QuestionPublic(BaseModel): 
+class QuestionPublic(BaseModel):
     id: int
     question_text: str
     options: List[str]
     skill_category: str
 
-class AnswerSubmission(BaseModel): 
+class AnswerSubmission(BaseModel):
     question_id: int
     selected_answer: str
 
-class SkillTestStartResponse(BaseModel): 
+class SkillTestStartResponse(BaseModel):
     test_id: int
     questions: List[QuestionPublic]
 
-class SkillTestSubmitResponse(BaseModel): 
+class SkillTestSubmitResponse(BaseModel):
     test_result_id: int
     score: int
     total_questions: int
 
-class SkillTestResultItemPublic(BaseModel): 
+class SkillTestResultItemPublic(BaseModel):
     question_text: str
     selected_answer: Optional[str]
     is_correct: Optional[bool]
 
-class SkillTestResultPublic(BaseModel): 
+class SkillTestResultPublic(BaseModel):
     id: int
     candidate_id: int
     score: Optional[int]
