@@ -3,8 +3,6 @@ from sqlmodel import Field, SQLModel, Relationship # Field để định nghĩa 
 from typing import Optional, List # Các kiểu dữ liệu Python
 from datetime import datetime # Để làm việc với thời gian
 from pydantic import BaseModel, EmailStr
-from app.schemas.match_results_schemas import MatchResultPublic
-
 
 # Định nghĩa bảng User (người dùng hệ thống, ví dụ: nhà tuyển dụng)
 class User(SQLModel, table=True): # table=True nghĩa là đây sẽ là một bảng trong DB
@@ -40,7 +38,7 @@ class MatchResultCreate(MatchResultBase):
 
 class MatchResultPublic(MatchResultBase):
     id: int
-    
+
 # Định nghĩa bảng Candidate (ứng viên)
 class Candidate(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
