@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from sqlmodel.ext.asyncio.session import selectinload 
+from sqlalchemy.orm import selectinload
 from typing import List
 import json 
 from datetime import datetime 
