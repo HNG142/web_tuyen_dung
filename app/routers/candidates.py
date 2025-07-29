@@ -3,7 +3,7 @@ from sqlmodel import Session, select # SQLModel để làm việc với DB
 from sqlalchemy.orm import selectinload # Để tải các mối quan hệ (ví dụ: lấy ứng viên kèm theo kết quả phỏng vấn)
 from typing import List, Optional # Kiểu dữ liệu Python
 import json # Để xử lý JSON
-from app.schemas.schemas import MatchResultPublic
+from app.schemas import MatchResultPublic
 from app.database import get_session # Lấy phiên DB
 from app.models import Candidate, MatchResult, Interview, SkillTestResult # Các Model dữ liệu
 from app.schemas import CandidateCreate, CandidatePublic, CVJDUploadResponse, MatchResultPublic, SendOfferRequest # Các Schemas
