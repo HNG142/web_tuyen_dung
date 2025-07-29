@@ -1,27 +1,26 @@
-import smtplib # Thư viện để gửi email qua giao thức SMTP
-from email.mime.text import MIMEText # Để tạo nội dung email dạng văn bản
-from email.mime.multipart import MIMEMultipart # Để tạo email có nhiều phần (ví dụ: văn bản và HTML)
-from app.config import settings # Nhập các cài đặt email từ config
+import smtplib 
+from email.mime.text import MIMEText 
+from email.mime.multipart import MIMEMultipart 
+from app.config import settings 
 
 async def send_email(to_email: str, subject: str, body: str):
     """Gửi một email đến địa chỉ đã cho."""
-    # Kiểm tra xem cấu hình email đã đầy đủ chưa
     if not settings.EMAIL_USERNAME or not settings.EMAIL_PASSWORD or not settings.EMAIL_HOST:
         print("Cấu hình email chưa đầy đủ trong .env. Bỏ qua việc gửi email.")
         return False
 
     msg = MIMEMultipart()
-    msg['From'] = settings.EMAIL_USERNAME # Email gửi đi
-    msg['To'] = to_email # Email nhận
-    msg['Subject'] = subject # Tiêu đề email
+    msg['From'] = settings.EMAIL_USERNAME 
+    msg['To'] = to_email 
+    msg['Subject'] = subject 
     
-    msg.attach(MIMEText(body, 'html')) # Đính kèm nội dung email dưới dạng HTML
+    msg.attach(MIMEText(body, 'html')) 
 
     try:
         with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
-            server.starttls()  # Bắt đầu kết nối bảo mật TLS
-            server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD) # Đăng nhập vào SMTP server
-            server.send_message(msg) # Gửi email
+            server.starttls() 
+            server.login(settings.EMAIL_USERNAME, settings.EMAIL_PASSWORD) 
+            server.send_message(msg) 
         print(f"Email đã được gửi thành công đến {to_email}")
         return True
     except Exception as e:

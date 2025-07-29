@@ -1,16 +1,16 @@
-from fastapi import FastAPI # Khung web FastAPI
+from fastapi import FastAPI 
 from fastapi.middleware.cors import CORSMiddleware
-from app.database import create_db_and_tables # Import hàm tạo bảng DB
-from fastapi.staticfiles import StaticFiles # Để phục vụ các file tĩnh (CSS, JS)
-from fastapi.responses import HTMLResponse # Để trả về các trang HTML
-from fastapi.templating import Jinja2Templates # Để render các template HTML
-from dotenv import load_dotenv # Để tải các biến môi trường từ file .env
-import os # Để tương tác với hệ điều hành
+from app.database import create_db_and_tables 
+from fastapi.staticfiles import StaticFiles 
+from fastapi.responses import HTMLResponse 
+from fastapi.templating import Jinja2Templates 
+from dotenv import load_dotenv 
+import os 
 
-from app.database import create_db_and_tables # Hàm tạo bảng DB
-from app.routers import candidates, interview, tests, auth # Nhập các router đã tạo
+from app.database import create_db_and_tables
+from app.routers import candidates, interview, tests, auth 
 
-load_dotenv() # Tải các biến môi trường từ file .env ngay khi ứng dụng khởi động
+load_dotenv() 
 
 app = FastAPI(
     title="Ứng dụng Tuyển dụng AI",
@@ -18,16 +18,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Gắn thư mục 'static' để phục vụ các file CSS, JavaScript, hình ảnh
-# Khi bạn truy cập /static/css/style.css, nó sẽ lấy file từ thư mục static/css/style.css
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Cấu hình Jinja2Templates để render các file HTML trong thư mục 'templates'
 templates = Jinja2Templates(directory="templates")
 
-# Bao gồm các router vào ứng dụng chính
-# Mỗi router sẽ xử lý các nhóm API cụ thể
-app.include_router(auth.router, prefix="/api/auth", tags=["Xác thực"]) # API cho đăng ký/đăng nhập
+app.include_router(auth.router, prefix="/api/auth", tags=["Xác thực"])
 app.include_router(candidates.router, prefix="/api/candidates", tags=["Ứng viên & So khớp CV/JD"]) # API quản lý ứng viên, tải CV/JD
 app.include_router(interview.router, prefix="/api/interview", tags=["Phỏng vấn AI"]) # API cho chatbot phỏng vấn
 app.include_router(tests.router, prefix="/api/tests", tags=["Kiểm tra kỹ năng"]) # API cho kiểm tra kỹ năng

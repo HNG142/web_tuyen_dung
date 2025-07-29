@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from sqlmodel.ext.asyncio.session import selectinload # Để tải các mối quan hệ (ví dụ: câu hỏi trong kết quả)
+from sqlmodel.ext.asyncio.session import selectinload 
 from typing import List
-import json # Để xử lý JSON (lưu options và suggestions)
-from datetime import datetime # Để làm việc với thời gian
+import json 
+from datetime import datetime 
 
 from app.database import get_session
 from app.models import Question, SkillTestResult, SkillTestResultItem, Candidate # Các Model
